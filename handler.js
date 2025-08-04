@@ -175,14 +175,14 @@ export async function handler(chatUpdate) {
                 if (!('restartDB' in settings)) settings.restartDB = 0
                 if (!('botIcon' in settings)) settings.botIcon = 'https://files.catbox.moe/gi65bh.png'
                 if (!('menuMedia' in settings)) settings.menuMedia = 'https://files.catbox.moe/w4pmmz.jpg'
-                if (!('botName' in settings)) settings.botName = 'Waguri Ai'
+                if (!('botName' in settings)) settings.botName = 'Shikimori Assitant'
                 if (!('moneda_rpg' in settings)) settings.moneda_rpg = 'Eris'
-                if (!('wm' in settings)) settings.wm = 'Waguri x KenisawaDev'
-                if (!('owner_numero' in settings)) settings.owner_numero = ['5493865642938', '0']
-                if (!('owner_nombre' in settings)) settings.owner_nombre = 'KenisawaDev'
-                if (!('link_owner' in settings)) settings.link_owner = 'https://wa.me/5493865642938'
-                if (!('canal_owner' in settings)) settings.canal_owner = 'https://whatsapp.com/channel/0029VarbyoN2ZjCkcPW7q33F'
-                if (!('id_canal_owner' in settings)) settings.id_canal_owner = '120363348355703366'
+                if (!('wm' in settings)) settings.wm = 'Skikimori Assitant'
+                if (!('owner_numero' in settings)) settings.owner_numero = ['51994143761', '0']
+                if (!('owner_nombre' in settings)) settings.owner_nombre = 'Dev.Daniel'
+                if (!('link_owner' in settings)) settings.link_owner = 'https://wa.me/51994143761'
+                if (!('canal_owner' in settings)) settings.canal_owner = 'https://whatsapp.com/channel/0029Vb1p7p17tkj28mEAZi0r'
+                if (!('id_canal_owner' in settings)) settings.id_canal_owner = '12036338749582705'
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
                 autoread: true,
