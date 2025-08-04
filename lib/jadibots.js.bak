@@ -1,0 +1,139 @@
+import {
+  Browsers,
+  DisconnectReason,
+  useMultiFileAuthState,
+  fetchLatestBaileysVersion,
+  makeCacheableSignalKeyStore,
+} from "@adiwajshing/baileys";
+import pino from "pino";
+import chalk from "chalk";
+import { join, resolve } from "path";
+import { makeWASocket } from "./simple.js";
+
+export let conn = null;
+export let conns = new Map();
+export const authFolder = "sessions/";
+export const authState = await useMultiFileAuthState(join(authFolder, "parent"));
+export const logger = pino({ level: "silent" });
+
+export async function start(conn = null, opts = { authState, isChild: false, usePairingCode: false }) {
+  const { version, isLatest } = await fetchLatestBaileysVersion();
+  console.log(`Usando WA v${version.join(".")}, isLatest: ${isLatest}`);
+
+  const socketConfig = {
+    version,
+    logger,
+    printQRInTerminal: !(opts.usePairingCode || opts.isChild),
+    browser: Browsers.ubuntu("Chrome"),
+    qrTimeout: 20000,
+    auth: {
+      creds: opts.authState.state.creds,
+      keys: makeCacheableSignalKeyStore(opts.authState.state.keys, logger.child({ stream: "store" })),
+    },
+  };
+
+  const sock = makeWASocket(socketConfig, {
+    ...(conn?.chats ? { chats: conn.chats } : {}),
+  });
+
+  if (conn) {
+    sock.isInit = conn.isInit;
+    sock.isReloadInit = conn.isReloadInit;
+  }
+
+  sock.isInit ??= false;
+  sock.isReloadInit ??= true;
+
+  await reload(sock, false, opts).catch(console.error);
+  return sock;
+}
+
+let oldHandler = null;
+export async function reload(sock, force = false, opts = { authState, isChild: false, usePairingCode: false }) {
+  if (!opts.handler) opts.handler = await importFile("./handler.js");
+  if (opts.handler instanceof Promise) opts.handler = await opts.handler;
+  if (!opts.handler && oldHandler) opts.handler = oldHandler;
+  oldHandler = opts.handler;
+
+  if (force) {
+    try { sock.ws.close(); } catch {}
+    sock.ev.removeAllListeners();
+    Object.assign(sock, await start(sock, opts) || {});
+  }
+
+  Object.assign(sock, messageConfig());
+
+  sock.ev.removeAllListeners();
+  if (opts.handler?.handler) sock.ev.on("messages.upsert", opts.handler.handler.bind(sock));
+  if (opts.handler?.participantsUpdate) sock.ev.on("group-participants.update", opts.handler.participantsUpdate.bind(sock));
+  if (opts.handler?.groupsUpdate) sock.ev.on("groups.update", opts.handler.groupsUpdate.bind(sock));
+  if (opts.handler?.deleteUpdate) sock.ev.on("message.delete", opts.handler.deleteUpdate.bind(sock));
+
+  if (!opts.isChild) {
+    sock.connectionUpdate = connectionUpdate.bind(sock, opts);
+    sock.ev.on("connection.update", sock.connectionUpdate);
+  }
+
+  sock.credsUpdate = opts.authState?.saveCreds?.bind(sock);
+  sock.ev.on("creds.update", sock.credsUpdate);
+  sock.isReloadInit = false;
+
+  return true;
+}
+
+export function messageConfig() {
+  return {
+    welcome: "❀ 𝚂𝚎𝚊 𝚋𝚒𝚎𝚗𝚟𝚎𝚗𝚒𝚍𝚘 @user 𝚊 @subject",
+    bye: "✧ 𝙷𝚊𝚜𝚝𝚊 𝚙𝚛𝚘𝚗𝚝𝚘 @user",
+    spromote: "✧ @user ahora es admin.",
+    sdemote: "✧ @user ya no es admin.",
+    sDesc: "✎ Nueva descripción:\n@desc",
+    sSubject: "✿ Nombre de grupo actualizado: @subject",
+    sIcon: "✧ Icono del grupo ha sido actualizado.",
+    sRevoke: "✎ Link del grupo renovado: @revoke",
+  };
+}
+
+async function connectionUpdate(opts, update) {
+  const { receivedPendingNotifications, connection, lastDisconnect, isOnline, isNewLogin } = update;
+
+  if (isNewLogin) console.log(chalk.greenBright("⛁ Login exitoso — Waguri Ai conectado."));
+
+  if (connection === "connecting") console.log(chalk.yellow("✿ Estableciendo conexión espiritual..."));
+  if (connection === "open") console.log(chalk.cyan("☁︎ Conexión abierta — sincronizado con Arvandor."));
+  if (isOnline === true) console.log(chalk.green("⚿ Estado: Conectado."));
+  if (isOnline === false) console.log(chalk.red("⚿ Estado: Desconectado."));
+  if (receivedPendingNotifications) console.log(chalk.magenta("✎ Notificaciones astrales pendientes."));
+
+  if (connection === "close") {
+    console.log(chalk.red("⚠︎ Conexión perdida. Intentando reconectar..."));
+    const status = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode;
+    const motivo = DisconnectReason[status] || "Desconocido";
+
+    if (status !== DisconnectReason.loggedOut && status !== DisconnectReason.blockedNumber) {
+      console.log(chalk.redBright(`⤿ Motivo de desconexión: ${motivo}`));
+      await reload(this, true, opts).catch(console.error);
+    }
+  }
+
+  if (global.db?.data == null) await global.loadDatabase();
+}
+
+export async function importFile(module) {
+  module = resolve(module);
+  module = await import(`${module}?id=${Date.now()}`);
+  return module?.default || module;
+}
+
+export let opts = { authState, isChild: false, usePairingCode: false };
+
+export default {
+  conn,
+  opts,
+  conns,
+  logger,
+  authFolder,
+  start,
+  reload,
+  importFile,
+};

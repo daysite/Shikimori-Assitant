@@ -1,0 +1,181 @@
+const captionPairing = `
+Codigo: %code
+`.trim();
+const captionQR = `
+Escanea el codigo qr para convertirte en un bot temporal.
+El codigo qr expira en %time segundos.
+
+QR Count: %count/3
+`.trim();
+import qrcode from 'qrcode';
+import { join } from 'path';
+import { existsSync, promises as fs } from 'fs';
+import { delay, DisconnectReason, areJidsSameUser, jidNormalizedUser, useMultiFileAuthState } from '@adiwajshing/baileys';
+import conexion, { start, reload, authFolder as jbkeni } from './jadibots.js';
+export async function Jadibot(numerxd, _0x3ce648 = conexion.conn, _0x4790a9 = null, _0x57ac2b = false) {
+  numerxd = jidNormalizedUser(numerxd);
+  if (numerxd && numerxd.startsWith('0')) {
+    numerxd = '54' + numerxd.slice(0x1) + "@s.whatsapp.net";
+  }
+  const userjb = numerxd && numerxd.split('@')[0x0];
+  if (!userjb) {
+    throw new Error("Invalid JID");
+  }
+  const _0xaca750 = await startBot(numerxd, _0x3ce648, _0x4790a9, _0x57ac2b);
+  if (_0xaca750 && _0xaca750.user?.["jid"] && !areJidsSameUser(_0xaca750.user.jid, numerxd)) {
+    console.log("JID mismatch, expected:", numerxd, "got:", _0xaca750.user.jid);
+    try {
+      await _0xaca750.end();
+      const _0x7085e = join(jbkeni, userjb);
+      const _0x308f17 = join(jbkeni, _0xaca750.user.jid.split('@')[0x0]);
+      await fs.rename(_0x7085e, _0x308f17);
+      numerxd = _0xaca750.user.jid;
+    } catch (_0x515d6c) {
+      console.error(_0x515d6c);
+      numerxd = null;
+    } finally {
+      if (!numerxd) {
+        throw new Error("Failed to start bot");
+      }
+      conexion.conns["delete"](userjb);
+      await delay(0x7d0);
+      return Jadibot(numerxd, _0x3ce648, _0x4790a9, _0x57ac2b);
+    }
+    ;
+  }
+  ;
+  return _0xaca750;
+}
+;
+export async function startBot(numerojbs, conn = conexion.conn, sockMsg = null, usePair = false) {
+  let qrMsg, qrCount = 0
+  const jidStr = numerojbs.split('@')[0]
+  const sessionDir = join(global.jbkeni, jidStr)
+  const sessions = [...conexion.conns.values()].map(conn => conn.user?.jid)
+  if (sessions.includes(numerojbs)) throw new Error('El bot ya está en funcionamiento.')
+
+  const auth = await useMultiFileAuthState(sessionDir)
+  const config = { authState: auth, isChild: true, usePairingCode: usePair }
+  const sock = await start(null, config)
+  const modoVinculo = usePair ? 'Código de vinculación' : 'Código QR'
+  const sexo = async (...args) => conn?.reply(...args) || console.log(...args)
+
+  if (usePair && !sock.authState?.creds?.registered) {
+    await delay(1500)
+    try {
+      let paircode = await sock.requestPairingCode(jidStr)
+      paircode = paircode?.match(/.{1,4}/g)?.join('-') || paircode
+      if (sockMsg) await sexo(sockMsg.chat ?? numerojbs, `✿ 𝙲𝙾𝙳𝙸𝙶𝙾 𝙿𝙰𝚁𝙰 𝚅𝙸𝙽𝙲𝚄𝙻𝙰𝚁:
+
+${paircode}
+
+⌛ Vigente por 60s`, sockMsg)
+    } catch (err) {
+      console.error(err)
+      throw new Error('✧ No se pudo generar el código de vinculación.')
+    }
+  }
+
+  sock.ev.on('connection.update', async ({ qr, connection, lastDisconnect, isNewLogin }) => {
+    const disconnectCode = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
+    const disconnectMsg = lastDisconnect?.error?.output?.message || lastDisconnect?.error?.output?.payload?.message
+
+    if (qr && !usePair && sockMsg) {
+      if (qrCount >= 3) {
+        await sexo(sockMsg.chat, '⚠︎ Código QR expirado.')
+        try { sock.ws.close() } catch {}
+        sock.ev.removeAllListeners()
+        qrCount = 0
+        if (existsSync(sessionDir)) await rm(sessionDir, { recursive: true }).catch(console.error)
+        if (qrMsg?.key) await conn.sendMessage(sockMsg.chat, { delete: qrMsg.key })
+        return
+      }
+      if (qrMsg?.key) await conn.sendMessage(sockMsg.chat, { delete: qrMsg.key })
+      qrCount++
+      try {
+        const qrBuf = await qrcode.toBuffer(qr, {
+          scale: 8, margin: 4, width: 256,
+          color: { dark: '#000000ff', light: '#ffffffff' }
+        })
+        qrMsg = await conn.sendFile(sockMsg.chat, qrBuf, 'qr.png', `✿ Escanea el código QR
+⌛ Tiempo restante: ${(sock.ws?.config?.qrTimeout || 14000) / 1000}s
+🔁 Intento: ${qrCount}/3`, sockMsg)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    if (connection === 'open') {
+      if (!isNewLogin && sockMsg?.chat) await sexo(sockMsg.chat, '✧ Conexión establecida.', sockMsg)
+      console.log(chalk.green('☁︎ Conexión establecida con'), sock.user?.jid)
+    }
+
+    if (connection === 'close') {
+      console.log(chalk.red('⚠︎ Conexión cerrada — verificando estado.'))
+      if (disconnectCode) {
+        const isCritical = [DisconnectReason.loggedOut, DisconnectReason.connectionReplaced, DisconnectReason.timedOut, DisconnectReason.forbidden].includes(disconnectCode)
+        if (!isCritical) return await reload(sock, true, config).catch(console.error)
+
+        if (disconnectCode === DisconnectReason.timedOut) {
+          const isRegistered = sock.authState?.creds?.registered
+          if (sockMsg && !isRegistered) {
+            await sexo(sockMsg.chat, '✧ Código expirado.');
+            if (existsSync(sessionDir)) await rm(sessionDir, { recursive: true }).catch(console.error)
+          } else if (isRegistered) {
+            sock.logger.info('✧ Timeout — reconectando...')
+            await reload(sock, true, config).catch(console.error)
+          }
+          return
+        }
+
+        if ([DisconnectReason.loggedOut, DisconnectReason.forbidden].includes(disconnectCode)) {
+          if (existsSync(sessionDir)) await rm(sessionDir, { recursive: true }).catch(console.error)
+          conexion.conns.delete(jidStr)
+          const reasonText = disconnectCode === DisconnectReason.loggedOut ? '🔒 Sesión cerrada' : '🚫 Número prohibido'
+          await sexo(sockMsg?.chat || numerojbs, `✧ Estado: ${reasonText}\n☁︎ El subbot fue desconectado correctamente.`, sockMsg)
+        }
+      }
+    }
+
+    if (isNewLogin) {
+      sock.logger.info(`${jidStr} ha iniciado sesión correctamente.`)
+      if (sockMsg) {
+        let confirm = await sockMsg.reply('❀ 𝙲𝚘𝚗𝚎𝚡𝚒𝚘́𝚗 𝚎𝚡𝚒𝚝𝚘𝚜𝚊!')
+        await delay(1000)
+        await sock.reply(sockMsg.chat, '✧ Sesión activa
+Subbot listo para usar comandos.', confirm)
+      }
+    }
+  })
+
+  let retry = 0
+  let waitForLogin = () => new Promise(res => sock?.user?.jid ? res() : (retry++, setTimeout(() => res(waitForLogin()), 2000)))
+  await waitForLogin()
+
+  if (sock?.user?.jid && !sessions.includes(sock.user.jid)) {
+    conexion.conns.set(jidStr, sock)
+  }
+
+  return sock
+}
+export async function restoreSession(sender = null) {
+  const sessions = await fs.readdir(jbkeni)
+
+  for (const session of sessions) {
+    await delay(1000)
+
+    // Ignora sesión padre
+    if (/parent/.test(session)) continue
+
+    // Ignora si no existe el archivo de credenciales
+    if (!existsSync(join(jbkeni, session, 'creds.json'))) continue
+
+    // Ignora si ya está activa en memoria
+    if (conexion.conns.has(session)) continue
+
+    // Restaura la sesión como subbot
+    await Jadibot(`${session}@s.whatsapp.net`, sender)
+  }
+}
+
+export default Jadibot;
