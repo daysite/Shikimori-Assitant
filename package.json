@@ -1,7 +1,7 @@
 {
-    "name": "Waguri-Ai",
+    "name": "Shikimori-Asistant",
     "version": "1.0.0",
-    "description": "Waguri Ai By KenisawaDev",
+    "description": "Shikimori Ai By Daniel.Dev",
     "main": "index.js",
     "type": "module",
     "directories": {
