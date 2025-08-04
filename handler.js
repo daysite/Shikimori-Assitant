@@ -658,7 +658,7 @@ global.dfail = (type, m, conn) => {
     
     let setn = global.db.data.settings[conn.user.jid] || {}
     let botnombrexd = setn.botName
-    let deco_msg = "`"+ setn.botName +"`\n\n"+`${msg}\n\n`+"``"
+    let deco_msg = "`🍟"+ setn.botName +"`\n\n"+`${msg}\n\n`+"``"
     if (msg) return conn.reply(m.chat, deco_msg, m)
 }
 
