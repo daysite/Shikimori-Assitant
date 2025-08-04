@@ -644,16 +644,16 @@ _@${participant.split`@`[0]} eliminó un mensaje._
 
 global.dfail = (type, m, conn) => {
     let msg = {
-        rowner: "✧ Perdon, Este comando es solo para mi Owner.",
-        owner: "> _*✧ Perdon, Solo mi creador puede usar este comando.*_",
-        mods: "> _*✧ Perdon, Este comando solo es para mods*_",
-        premium: "> _*✧ No eres un usuario Premium, Habla con mi owner*_",
-        group: "> _*✧ Perdon, Este comando solo es para grupos*_",
-        private: "> _*✧ Ve a mi chat privado y usa este comando*_",
-        admin: "> _*✧ Quien eres?, tu no eres admin*_",
-        botAdmin: "> _*✧ Es necesario que sea admin primero para usar esta función*_",
-        unreg: "> _*‼️USUARIO NO REGISTRADO‼️*_\n\n`Para registrarse:`\n\n> usa el comando .reg nombre.edad",
-        restrict: "> _*✧ Comando desactivado por mi Owner`*_" 
+        rowner: `🍭 Hola, este comando solo puede ser utilizado por el *Creador* de la Bot.`,
+        owner: `🍭 Hola, este comando solo puede ser utilizado por el *Creador* de la Bot y *Sub Bots*.`,
+        mods: `🍭 Hola, este comando solo puede ser utilizado por los *Moderadores* de la Bot.`,
+        premium: `🍭 Hola, este comando solo puede ser utilizado por Usuarios *Premium*.`,
+        group: `🍭 Hola, este comando solo puede ser utilizado en *Grupos*.`,
+        private: `🍭 Hola, este comando solo puede ser utilizado en mi Chat *Privado*.`,
+        admin: `🍭 Hola, este comando solo puede ser utilizado por los *Administradores* del Grupo.`,
+        botAdmin: `🍭 Hola, la bot debe ser *Administradora* para ejecutar este Comando.`,
+        unreg: `🍭 Hola, para usar este comando debes estar *Registrado.*\n\nUtiliza: */reg nombre.edad*\n\n> Ejemplo: /reg Daniel.17`,
+        restrict: `🍭 Hola, esta característica está *deshabilitada.*`  
     }[type]
     
     let setn = global.db.data.settings[conn.user.jid] || {}
