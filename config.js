@@ -26,22 +26,22 @@ let hora = moment.tz('America/Buenos_Aires').format('HH')
 const readMore = more.repeat(4001)
 
 /*============= INFO PRINCIPAL =============*/
-global.owner = [['5493865642938', 'KenisawaDev', true]]
+global.owner = [['51994143761', 'Dev.Daniel', true]]
 global.mods = []
 global.prems = []
-global.nomorbot = '5493865208712'
-global.nomorown = '5493865642938'
+global.nomorbot = '51994143761'
+global.nomorown = '51994143761'
 
 /*============= MARCA DE AGUA =============*/
 global.readMore = readMore
-global.author = 'KenisawaDev'
-global.namebot = 'Waguri Ai'
+global.author = 'Dev.Daniel 🇦🇱'
+global.namebot = 'Shikimori Assitant'
 global.wm = '© Waguri Ai By KenisawaDev'
 global.watermark = wm
 global.botdate = `⫹⫺ FECHA: ${week} ${date}\n⫹⫺ HORA: ${horario}`
 global.bottime = `H O R A : ${horario}`
-global.stickpack = `Sticker creado por ${namebot}\ngithub.com/MauroAzcurra\n\nWaguri Ai\n+${nomorbot}`
-global.stickauth = `© Waguri Ai By KenisawaDev`
+global.stickpack = `Sticker creado por ${namebot}\nhttps://dash.sunflarex.xyz\n\nBy Daniel\n+${nomorbot}`
+global.stickauth = `© Shikimori Assitant`
 global.week = `${week} ${date}`
 global.wibb = `${horario}`
 
