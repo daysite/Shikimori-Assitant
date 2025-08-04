@@ -191,13 +191,13 @@ export async function handler(chatUpdate) {
                 restrict: false,
                 botIcon: 'https://files.catbox.moe/gi65bh.png',
                 menuMedia: 'https://files.catbox.moe/w4pmmz.jpg',
-                botName: 'Waguri Ai',
+                botName: 'Shikimori Assitant',
                 moneda_rpg: 'Eris',
-                wm: 'Waguri x KenisawaDev',
-                owner_numero: ['5493865642938', '0'],
-                owner_nombre: 'KenisawaDev',
-                link_owner: 'https://wa.me/5493865642938',
-                canal_owner: 'https://whatsapp.com/channel/0029VarbyoN2ZjCkcPW7q33F',
+                wm: 'Shikimori x Dev.Daniel',
+                owner_numero: ['51994143761', '0'],
+                owner_nombre: 'Dev.Daniel',
+                link_owner: 'https://wa.me/51994143761',
+                canal_owner: 'https://whatsapp.com/channel/0029Vb1p7p17tkj28mEAZi0r',
                 id_canal_owner: '120363348355703366'
             }
         } catch (e) {
