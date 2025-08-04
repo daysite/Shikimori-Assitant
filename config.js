@@ -47,7 +47,7 @@ global.wibb = `${horario}`
 
 //*============= REDES =============*/
 global.sig = 'https://www.instagram.com/'
-global.sgh = 'https://github.com/MauroAzcurra'
+global.sgh = 'https://github.com/DanielDiod'
 global.sgc = 'https://whatsapp.com/channel/'
 global.sgw = 'https://wa.me/5493865642938'
 global.sdc = '-'
