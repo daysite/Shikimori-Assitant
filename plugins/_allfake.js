@@ -28,10 +28,10 @@ handler.all = async function (m) {
 // Obtener configuración desde la DB
 let settings = global.db?.data?.settings?.[conn?.user?.jid] || {}
 
-let newsletterId = settings.id_canal_owner || '120363348355703366'
-let canalSource = settings.canal_owner || 'https://whatsapp.com/channel/0029VarbyoN2ZjCkcPW7q33F'
-let watermark = settings.wm || 'Waguri x KenisawaDev'
-let botname = settings.botName || 'Waguri Ai'
+let newsletterId = settings.id_canal_owner || '12036338749582705'
+let canalSource = settings.canal_owner || 'https://whatsapp.com/channel/0029Vb1p7p17tkj28mEAZi0r'
+let watermark = settings.wm || 'Shikimori Assitant By Daniel'
+let botname = settings.botName || 'Shikimori Assitant'
 
 global.rcanal = {
   contextInfo: {
