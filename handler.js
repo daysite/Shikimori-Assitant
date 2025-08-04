@@ -198,7 +198,7 @@ export async function handler(chatUpdate) {
                 owner_nombre: 'Dev.Daniel',
                 link_owner: 'https://wa.me/51994143761',
                 canal_owner: 'https://whatsapp.com/channel/0029Vb1p7p17tkj28mEAZi0r',
-                id_canal_owner: '120363348355703366'
+                id_canal_owner: '12036338749582705'
             }
         } catch (e) {
             console.error(e)
@@ -574,7 +574,7 @@ externalAdReply: {
 title: global.db.data.settings[conn.user.jid].wm,
 body: "Group Notifications",
 thumbnailUrl: pp,
-sourceUrl: "https://whatsapp.com/channel/0029VarbyoN2ZjCkcPW7q33F",
+sourceUrl: "https://whatsapp.com/channel/0029Vb1p7p17tkj28mEAZi0r",
 mediaType: 1,
 renderLargerThumbnail: true
 }}}
@@ -644,7 +644,7 @@ _@${participant.split`@`[0]} eliminó un mensaje._
 
 global.dfail = (type, m, conn) => {
     let msg = {
-        rowner: "> _*✧ Perdon, Este comando es solo para mi Owner.*_",
+        rowner: "✧ Perdon, Este comando es solo para mi Owner.",
         owner: "> _*✧ Perdon, Solo mi creador puede usar este comando.*_",
         mods: "> _*✧ Perdon, Este comando solo es para mods*_",
         premium: "> _*✧ No eres un usuario Premium, Habla con mi owner*_",
