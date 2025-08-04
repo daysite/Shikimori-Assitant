@@ -115,7 +115,7 @@ participant : '0@s.whatsapp.net'
 },
 message: {
 newsletterAdminInviteMessage: {
-newsletterJid: '120363210705976689@newsletter',
+newsletterJid: '12036338749582705@newsletter',
     newsletterName: '',
     caption: `${wm} | 2022 - 2025`
 }}}
