@@ -82,7 +82,7 @@ var link_img = settings.botIcon || `https://files.catbox.moe/ebpl7z.jpg`
  *📅 Edad:* ${age} Años 
 
 
-*\`NUMERO DE SERIE\`*
+*NUMERO DE SERIE*
 ${sn}
 
 **Términos de servicio (TOS) - ${settings.botName} ESM**
