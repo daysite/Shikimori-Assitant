@@ -110,14 +110,3 @@ Registrarse significa aceptar los términos.
                 buttonId: `${usedPrefix}menu`,  // El botón para ver el menú
                 buttonText: { displayText: 'Menu' },
                 type: 1
-            }
-        ],
-        headerType: 1,
-        viewOnce: true
-    }, { quoted: m });
-}
-
-handler.help = ['verificar', 'registrar'].map(v => v + ' <nombre>.<edad>')
-handler.command = /^(verificar|reg(istrar)?)$/i
-
-export default handler
