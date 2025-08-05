@@ -12,7 +12,7 @@ let handler = async function (m, { text, usedPrefix, conn }) {
 
 const settings = global.db.data.settings[conn.user.jid] || {}
 
-var link_img = settings.botIcon || `https://files.catbox.moe/fmea13.jpg`
+var link_img = settings.botIcon || `https://files.catbox.moe/ebpl7z.jpg`
     let user = global.db.data.users[m.sender]
     let nombre = conn.getName(m.sender)
         // Crear un número de serie único
@@ -39,12 +39,12 @@ var link_img = settings.botIcon || `https://files.catbox.moe/fmea13.jpg`
     // Verificación del formato
     if (!Reg.test(text)) {
         return conn.sendMessage(m.chat, {
-         text: `✧ Formato incorrecto. Usa el formato: *${usedPrefix}reg Nombre.Edad*`,
+         text: `🍭 Formato incorrecto. Usa el formato: *${usedPrefix}reg Nombre.Edad*`,
          footer: wm,
          buttons: [
             {
                 buttonId: bbbkeni,  // El botón para el registro automático 
-                buttonText: { displayText: '✧ Registro Automático' },
+                buttonText: { displayText: 'Registro Automático' },
                 type: 1
             }
         ],
@@ -56,13 +56,13 @@ var link_img = settings.botIcon || `https://files.catbox.moe/fmea13.jpg`
     let [_, name, age] = text.match(Reg)
 
     // Validaciones de nombre y edad
-    if (!name) throw m.reply('✧ Solo puedes poner letras en tu nombre')
-    if (!age) throw m.reply('✧ Solo puedes poner números en tu edad')
+    if (!name) throw m.reply('🍭 Solo puedes poner letras en tu nombre')
+    if (!age) throw m.reply('🍭 Solo puedes poner números en tu edad')
 
     age = parseInt(age)
-    if (isNaN(age)) throw m.reply('✧ La edad debe ser un número.');
-    if (age > 120) throw m.reply('✧ Usted es demasiado viejo')
-    if (age < 16) throw m.reply('✧ Usted es demasiado menor')
+    if (isNaN(age)) throw m.reply('🍭 La edad debe ser un número.');
+    if (age > 120) throw m.reply('🍭 Usted es demasiado viejo')
+    if (age < 16) throw m.reply('🍭 Usted es demasiado menor')
 
     // Registro del usuario
     user.name = name.trim()
@@ -78,15 +78,15 @@ var link_img = settings.botIcon || `https://files.catbox.moe/fmea13.jpg`
 *\`REGISTRO COMPLETO\`*
 
 ╭─「 Info 」
-│ *✧ Nombre:* ${name}
-│ *✧ Edad:* ${age} Años 
+│ *👤 Nombre:* ${name}
+│ *📅 Edad:* ${age} Años 
 ╰────
 
-*✧ Número de serie:*
+*🍟 Número de serie:*
 ${sn}
 
 **Términos de servicio (TOS) - ${settings.botName} ESM**
-Al utilizar Waguri Ai ESM, usted acepta los siguientes términos:
+Al utilizar *Shikimori* , usted acepta los siguientes términos:
 1. *ESTÁ ESTRICTAMENTE PROHIBIDO CAMBIAR EL TEMPORIZADOR/MENSAJE TEMPORAL*
 2. *NO ENVÍO DE MEDIOS NSFW*
 3. *EL SPAM DE NÚMEROS DE BOT ESTÁ PROHIBIDO*
@@ -108,7 +108,7 @@ Registrarse significa aceptar los términos.
         buttons: [
             {
                 buttonId: `${usedPrefix}menu`,  // El botón para ver el menú
-                buttonText: { displayText: '✧ Ver Menú' },
+                buttonText: { displayText: 'Menu' },
                 type: 1
             }
         ],
