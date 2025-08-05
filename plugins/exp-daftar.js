@@ -77,12 +77,12 @@ var link_img = settings.botIcon || `https://files.catbox.moe/ebpl7z.jpg`
     let txt_reg = `
 *\`REGISTRO COMPLETO\`*
 
-╭─「 Info 」
-│ *👤 Nombre:* ${name}
-│ *📅 Edad:* ${age} Años 
-╰────
 
-*🍟 Número de serie:*
+ *👤 Nombre:* ${name}
+ *📅 Edad:* ${age} Años 
+
+
+*\`NUMERO DE SERIE\`*
 ${sn}
 
 **Términos de servicio (TOS) - ${settings.botName} ESM**
