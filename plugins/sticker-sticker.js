@@ -12,7 +12,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       // Jalankan kode untuk video di sini
       if ((q.msg || q).seconds > 10) return m.reply('✧ Máximo 10 segundos.')
       let img = await q.download?.()
-      if (!img) throw m.reply(`✧ Responde a un Vídeo con el comando*${usedPrefix + command}*`)
+      if (!img) throw m.reply(`🍭 Responde a un Vídeo con el comando*${usedPrefix + command}*`)
       let stiker = false
       try {
         stiker = await sticker(img, false, global.stickpack, global.stickauth)
@@ -44,7 +44,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       }
       m.reply(stiker)
     } else {
-      m.reply('     `✧ Responde a una Imagen o Video.`')
+      m.reply('     `🍭 Responde a una Imagen o Video.`')
     }
   } catch (e) {
     console.error(e)
